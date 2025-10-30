@@ -70,6 +70,13 @@ enterRoomBtn.addEventListener('click', () => {
     personalGoalVal = Number(personalValue.value) || 0;
     personalGoalUnit = personalUnit.value || 'words';
 
+    if (isHost) {
+        const durationSeconds = (Number(durationInput.value) || 5) * 60;
+        hostConfig.durationSeconds = durationSeconds;
+        console.log(durationSeconds)
+        socket.emit('configureRoom', { roomId: currentRoom, durationSeconds });
+    }
+
     socket.emit('joinRoom', {
         roomId,
         name: displayName,
@@ -103,10 +110,12 @@ enterRoomBtn.addEventListener('click', () => {
     socket.emit('requestUserList', { roomId: currentRoom });
     socket.emit('updateRoomDuration', { roomId: currentRoom, durationSeconds: hostConfig.durationSeconds });
 
-    durationInputRoom.value = durationInput.value
+
     displayCountdown(hostConfig.durationSeconds);
 
     sendProgressDebounced();
+
+    durationInputRoom.value = durationInput.value
 });
 
 // -------- Sprint Start --------

@@ -85,13 +85,16 @@ io.on('connection', (socket) => {
     });
 
     socket.on('configureRoom', ({ roomId, durationSeconds }) => {
-        const room = rooms[roomId];
-        if (!room || room.hostId !== socket.id) return;
-
-        room.config.durationSeconds = Number(durationSeconds) || 300;
+        let room = rooms[roomId];
+        if (!room) {
+            // Store temporarily if room doesn't exist yet
+            room = rooms[roomId] = { pendingConfig: { durationSeconds } };
+            return;
+        }
+        room.config.durationSeconds = durationSeconds;
         io.to(roomId).emit('roomConfigured', room.config);
-        emitUserList(roomId);
     });
+
 
     socket.on('startSprint', ({ roomId }) => {
         const room = rooms[roomId];
