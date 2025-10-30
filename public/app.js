@@ -23,6 +23,7 @@ const snapshotsDiv = document.getElementById('snapshots');
 const othersList = document.getElementById('othersList');
 const autosaveIndicator = document.getElementById('autosaveIndicator');
 const countdownLabel = document.getElementById('countdownLabel');
+const nextSprintCountdownLabel = document.getElementById('nextSprintCountdown');
 
 // -------- State --------
 let currentRoom = null;
@@ -74,6 +75,7 @@ let sprintControls = document.getElementById('sprintControls')
 editorControls.classList.add('hidden');
 sprintControls.classList.add('hidden');
 countdownLabel.classList.add('hidden');
+nextSprintCountdownLabel.classList.add("hidden")
 
 // -------- Room Join/Create --------
 createBtn.addEventListener('click', () => {
@@ -147,7 +149,9 @@ enterRoomBtn.addEventListener('click', () => {
 
 // -------- Sprint Start --------
 startBtn.addEventListener('click', () => {
+    console.log("tried to sprint")
     if (!currentRoom || !isHost || sprintState !== 'idle') return;
+    console.log("start sprint")
     socket.emit('startSprint', { roomId: currentRoom });
     sprintState = 'running';
     updateStartButton();
@@ -342,6 +346,7 @@ function displayCountdown(sec) {
 function updateStartButton() {
     startBtn.disabled = sprintState === 'running' || sprintState === 'ending';
     durationInputRoom.disabled = sprintState === 'running' || sprintState === 'ending';
+    console.log(startBtn.disabled);
 }
 
 
@@ -396,6 +401,28 @@ function sanitizeFileName(n) {
     return (n || 'user').replace(/[^a-z0-9_\-]/gi, '_').toLowerCase();
 }
 
+function startNextSprintCountdown(seconds) {
+    let remaining = seconds;
+
+    nextSprintCountdownLabel.classList.remove("hidden")
+
+    nextSprintCountdownLabel.textContent = `Next sprint available in ${remaining}s`;
+    nextSprintCountdownLabel.style.display = 'block';
+
+    const timer = setInterval(() => {
+        remaining--;
+        if (remaining <= 0) {
+            clearInterval(timer);
+            nextSprintCountdownLabel.style.display = 'none';
+            sprintState = 'idle';
+            updateStartButton();
+        } else {
+            nextSprintCountdownLabel.textContent = `Next sprint available in ${remaining}s`;
+        }
+    }, 1000);
+}
+
+
 // -------- Socket Handlers --------
 socket.on('roomState', payload => {
     if (!payload) return;
@@ -425,3 +452,13 @@ socket.on('tick', ({ remainingMs }) => displayCountdown(Math.max(0, Math.floor(r
 socket.on('roomNotFound', () => alert('Room not found'));
 socket.on('hostLeft', () => { /* handle host leaving */ });
 socket.on('requestFinalProgress', () => sendFinalProgress());
+
+socket.on('sprintEnded', ({ snapshots }) => {
+    sprintState = 'ended';
+    updateStartButton();
+    showSnapshots(snapshots);
+
+    // start a 10-second cooldown before next sprint
+    startNextSprintCountdown(10);
+});
+
