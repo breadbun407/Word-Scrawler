@@ -1,0 +1,100 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>Word Scrawler</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <link rel="stylesheet" href="/styles.css" />
+</head>
+<body>
+  <div id="app" class="container">
+    <header class="header">
+      <h1>Word Scrawler</h1>
+      <p class="sub">Write together</p>
+    </header>
+
+    <main class="main">
+      <section class="left">
+        <div class="panel" id="roomPanel">
+          <label>Room</label>
+          <div class="row">
+            <input id="roomInput" type="text" placeholder="Paste room id or create one" />
+            <button id="createBtn">Create Room</button>
+            
+          </div>
+
+          <label>Your name</label>
+          <input id="nameInput" type="text" placeholder="Display name" />
+
+          <div id="hostControls" class="host-controls hidden">
+            <h3>Host</h3>
+            <label>Sprint duration (minutes)</label>
+            <input id="durationInput" type="number" min="1" value="5" />
+            <div class="share">Invite link: <input id="shareLink" readonly /></div>
+          </div>
+
+          <div class="join-controls">
+            <label>Personal goal</label>
+            <div class="row">
+              <input id="personalValue" type="number" min="0" placeholder="value" />
+              <select id="personalUnit">
+                <option value="words">words</option>
+                <option value="percent">percent of goal</option>
+              </select>
+            </div>
+            <div class="row" style="margin-top:10px;">
+              <button id="enterRoomBtn">Enter Room</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="panel" id="editorPanel" style="display:none;">
+          <div class="editorHeader">
+            <div>
+
+          </div>
+
+          <div id="editorWrapper">
+            <!-- contenteditable editor; we never write into this node programmatically except on restore -->
+            <div id="editor" contenteditable="true" spellcheck="true" aria-label="Writing area"></div>
+          </div>
+
+          <div class="editorFooter">
+            <div id="myProgress">Words: 0</div>
+            <div id="othersList"></div>
+          </div>
+        </div>
+
+        <div class="panel" id="snapshotsPanel" style="display:none;">
+          <h3>Sprint results</h3>
+          <div id="snapshots"></div>
+        </div>
+      </section>
+
+      <aside class="right">
+        <div class="editorControls" id="editorControls">
+              <label class="small"></label>
+              <div id="autosaveIndicator" class="autosave idle">Autosave</div>
+            </div>
+        <div class="panel">
+          <h3>Participants</h3>
+          <ul id="participants"></ul>
+        </div>
+            <div id="sprintControls" class="sprint-controls">
+            <button id="startBtn" class="primary">Start Sprint</button>
+            <div></div>
+            <label id="sprintSetupRoom">Sprint duration (minutes)</label>
+            <input id="durationInputRoom" type="number" min="1" value="5" />
+            </div>
+
+            <div id="countdownLabel">
+                Time Remaining: <label id="countdown">00:00</label>
+            </div>
+      </aside>
+    </main>
+  </div>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="/app.js"></script>
+</body>
+</html>

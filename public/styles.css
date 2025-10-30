@@ -1,0 +1,256 @@
+/* public/styles.css
+   Sage-green luxe styling with a calm, spacious editor
+*/
+
+/* Theme */
+:root {
+    --bg: #f6fbf6;
+    --card: #ffffff;
+    --sage: #95c495;
+    --muted: #5b6b56;
+    --accent: #4f8d4f;
+    --shadow: rgba(10, 30, 10, 0.06);
+    font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    background: linear-gradient(180deg, var(--bg), #f0f7f0);
+    color: #213322;
+    -webkit-font-smoothing: antialiased;
+}
+
+.container {
+    max-width: 1100px;
+    margin: 28px auto;
+    padding: 18px;
+}
+
+.header h1 {
+    margin: 0;
+    font-size: 28px;
+    color: #123;
+}
+
+.header .sub {
+    color: var(--muted);
+    margin-top: 4px;
+    font-size: 14px;
+}
+
+/* Layout */
+.main {
+    display: flex;
+    gap: 16px;
+    align-items: flex-start;
+    /* right panel follows left column height */
+}
+
+.left {
+    flex: 2;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.right {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    flex-shrink: 0;
+    position: sticky;
+    top: 18px;
+    /* distance from top of viewport */
+    max-height: calc(100vh - 36px);
+    /* leave some space for header/margin */
+    overflow-y: auto;
+    /* scroll if content exceeds viewport */
+}
+
+/* Panels */
+.panel {
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.94), var(--card));
+    border-radius: 10px;
+    padding: 14px;
+    box-shadow: 0 10px 30px var(--shadow);
+}
+
+.row {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    margin-top: 8px;
+}
+
+input[type="text"],
+input[type="number"],
+select {
+    padding: 8px 10px;
+    border-radius: 8px;
+    border: 1px solid #e1efe1;
+    flex: 1;
+    font-size: 14px;
+    background: #fbfff8;
+}
+
+button {
+    padding: 8px 12px;
+    border-radius: 8px;
+    border: none;
+    background: var(--accent);
+    color: white;
+    cursor: pointer;
+}
+
+button.primary {
+    background: #2f6f2f;
+}
+
+.hidden {
+    display: none;
+}
+
+.small {
+    font-size: 13px;
+    color: var(--muted);
+}
+
+/* Editor area */
+#editorWrapper {
+    position: relative;
+    margin-top: 10px;
+    border-radius: 12px;
+    border: 1px solid #e6efe6;
+    background: linear-gradient(180deg, #fcfff8, #ffffff);
+    box-shadow: 0 6px 18px rgba(20, 40, 20, 0.03);
+    overflow: auto;
+    min-height: 280px;
+}
+
+/* Typewriter mode: fixed height with vertical centering */
+#editorWrapper.typewriter {
+    height: 420px;
+    display: block;
+    overflow: auto;
+}
+
+/* Editor content */
+#editor {
+    padding: 28px 36px;
+    font-family: "Georgia", serif;
+    font-size: 17px;
+    line-height: 1.7;
+    color: #213322;
+    outline: none;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    min-height: 240px;
+}
+
+/* Focus ring */
+#editorWrapper:focus-within {
+    box-shadow: 0 0 0 6px rgba(120, 160, 120, 0.08);
+    border-color: var(--sage);
+}
+
+/* selection */
+#editor::selection {
+    background: #cfe9cf;
+}
+
+/* vertical guide to mimic page width */
+#editorWrapper::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 60ch;
+    width: 1px;
+    background: rgba(80, 120, 80, 0.04);
+    pointer-events: none;
+}
+
+/* footer */
+.editorFooter {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 8px;
+}
+
+#participants {
+    list-style: none;
+    padding-left: 0;
+    margin: 0;
+}
+
+/* small progress bubbles */
+.mini {
+    padding: 6px 8px;
+    background: #edf7ee;
+    margin-bottom: 6px;
+    border-radius: 6px;
+    font-size: 13px;
+    color: #133;
+}
+
+/* autosave indicator */
+.autosave {
+    font-size: 13px;
+    padding: 6px 8px;
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.6);
+    color: var(--muted);
+    border: 1px solid #e7efe7;
+}
+
+.autosave.pending {
+    color: #d97a1a;
+    border-color: #fde8d6;
+    background: #fff8f0;
+}
+
+.autosave.saved {
+    color: #2f7f2f;
+    border-color: #e6f5e6;
+    background: #f4fff4;
+}
+
+.autosave.idle {
+    color: var(--muted);
+}
+
+/* snapshots */
+.snapshot {
+    border: 1px solid #e3efe3;
+    padding: 10px;
+    border-radius: 8px;
+    background: #fcfff8;
+    margin-bottom: 8px;
+}
+
+.snapshot pre {
+    background: #f4fbf4;
+    padding: 8px;
+    border-radius: 6px;
+    white-space: pre-wrap;
+    max-height: 220px;
+    overflow: auto;
+}
+
+/* responsive */
+@media (max-width:900px) {
+    .main {
+        flex-direction: column;
+    }
+
+    .right {
+        position: static;
+        max-height: none;
+    }
+}
