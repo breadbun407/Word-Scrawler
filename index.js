@@ -55,6 +55,7 @@ app.get('/create', (req, res) => {
 
 // Socket.io connections
 io.on('connection', (socket) => {
+    console.log("User connected")
 
     socket.on('joinRoom', ({ roomId, name, isHost, personalGoalValue, personalGoalUnit }) => {
         if (!roomId || !rooms[roomId]) return socket.emit('roomNotFound');
