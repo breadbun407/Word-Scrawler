@@ -53,6 +53,22 @@ if (params.has('room')) {
     }
 }
 
+const pending = JSON.parse(localStorage.getItem('pendingRoomData') || '{}');
+
+// Only populate inputs if there’s pending data
+if (pending.name) nameInput.value = pending.name;
+if (pending.goalVal) personalValue.value = pending.goalVal;
+if (pending.goalUnit) personalUnit.value = pending.goalUnit;
+if (pending.roomId) roomInput.value = pending.roomId;
+
+// Clear the data unless the page was just navigated via createBtn
+if (!localStorage.getItem('preservePending')) {
+    localStorage.removeItem('pendingRoomData');
+} else {
+    // Remove the flag for the next reload
+    localStorage.removeItem('preservePending');
+}
+
 let editorControls = document.getElementById('editorControls')
 let sprintControls = document.getElementById('sprintControls')
 editorControls.classList.add('hidden');
@@ -60,7 +76,18 @@ sprintControls.classList.add('hidden');
 countdownLabel.classList.add('hidden');
 
 // -------- Room Join/Create --------
-createBtn.addEventListener('click', () => location.href = '/create');
+createBtn.addEventListener('click', () => {
+    localStorage.setItem('pendingRoomData', JSON.stringify({
+        name: nameInput.value || 'Anonymous',
+        goalVal: personalValue.value || 0,
+        goalUnit: personalUnit.value || 'words',
+        roomId: roomInput.value || ''
+    }));
+    // Set a flag so the page knows to preserve this data after reload
+    localStorage.setItem('preservePending', '1');
+
+    location.href = '/create'; // reloads same page
+});
 
 enterRoomBtn.addEventListener('click', () => {
     const roomId = (roomInput.value || '').trim();
