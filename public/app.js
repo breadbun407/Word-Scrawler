@@ -306,8 +306,6 @@ function displayCountdown(sec) {
 function updateStartButton() {
     startBtn.disabled = sprintState === 'running' || sprintState === 'ending';
     durationInputRoom.disabled = sprintState === 'running' || sprintState === 'ending';
-    console.log(sprintState)
-    console.log(durationInputRoom.disabled)
 }
 
 
